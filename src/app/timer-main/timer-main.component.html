@@ -1,0 +1,50 @@
+<div class="gradient-color" style="height: 100vh; padding-top: 8em;">
+  <div class="container d-flex justify-content-center">
+    <div class="card shadow" style="width: 50rem; height:35rem;">
+      <p class="align-center">
+        <img class="card-img-top img-h-w" alt="Responsive image" src="assets/ppp_logo.png">
+      </p>
+      <form class="card-body" [formGroup]='timeFG'>
+        <form [formGroup]='orderServiceFG'>
+          <div class=" card row shadow" style="align-content: center; margin: 0 2em 2em 2em;">
+            <div class="card-body" style="display: inherit; text-align: center;">
+              <div class="form-group  col-7">
+                <input class="form-control" formControlName='Title' type="text" placeholder="Title" />
+              </div>
+              <div class=" form-group col-4">
+                <input class="form-control" formControlName='Duration' type="text" placeholder="Duration hh:mm:ss" />
+              </div>
+              <div class="form-group col-1">
+                <button type="button" class="btn btn-primary" [disabled]='isOrderServiceFGValid()'
+                  (click)='addOrderOfService(orderServiceFG.value)'>Add</button>
+              </div>
+            </div>
+            <div class="row" style=" align-content: center; margin-bottom: inherit;">
+              <div class="col-6 offset-3">
+                <ng-select [items]="orderOfService" bindValue="value" bindlabel="label"
+                  (change)='orderServiceSelected($event)' placeholder="Select item from Order of service"
+                  formControlName="Duration">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+        </form>
+
+
+        <div class="row">
+          <div class="form-group col-6 offset-3">
+            <input class="form-control" type="text" placeholder="Time in format hh:mm:ss" formControlName='Time' />
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group  col-6 offset-5">
+            <button type="button" class="btn "
+              style="margin-right: 1em; background-color: #5FFBF1; border-color: #5FFBF1;"
+              (click)='startTimer()'>Start</button>
+            <button type="button" class="btn" style="background-color: #D16BA5; border-color: #D16BA5;"
+              (click)=stopTimer()>Stop</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>

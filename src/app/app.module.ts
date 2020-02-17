@@ -7,6 +7,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // <-- here
 import { RoundProgressModule } from 'angular-svg-round-progressbar'; // <-- here
 import { TimerMainComponent } from './timer-main/timer-main.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NotifierModule } from 'angular-notifier';
+
 
 @NgModule({
   declarations: [
@@ -19,7 +21,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     FormsModule,
     RoundProgressModule,
     ReactiveFormsModule,
-    NgSelectModule
+    NgSelectModule,
+    NotifierModule
   ],
   providers: [],
   bootstrap: [

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgSelectModel } from '../ng-select-model';
 import { Title } from '@angular/platform-browser';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { NotifierService } from 'angular-notifier';
 
 @Component({
   selector: 'app-timer-main',
@@ -15,7 +16,9 @@ export class TimerMainComponent implements OnInit {
   timeFG: FormGroup;
   orderOfService: Array<NgSelectModel> = [];
   orderServiceFG: FormGroup;
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private notifierService: NotifierService) {
   }
 
   ngOnInit() {
@@ -41,6 +44,8 @@ export class TimerMainComponent implements OnInit {
   addOrderOfService(item: { Title: string, Duration: string }) {
     this.orderOfService = [...this.orderOfService, ({ value: item.Duration, label: item.Title } as NgSelectModel)];
     this.orderServiceFG.reset();
+
+    this.notifierService.notify('success', 'Added sucessfully');
     console.log(this.orderOfService);
   }
 

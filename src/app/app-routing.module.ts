@@ -5,7 +5,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 
 const routes: Routes = [
-  { path: '', component: TimerMainComponent },
+  { path: '', redirectTo: '/timer', pathMatch: 'full' },
+  { path: 'timer', component: TimerMainComponent },
   { path: 'counter', component: TimerCounterComponent }
 ];
 

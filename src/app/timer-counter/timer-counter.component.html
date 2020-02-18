@@ -1,3 +1,12 @@
-<p>
-  timer-counter works!
-</p>
+<!-- Countdown 3-->
+<div class="rounded bg-gradient-3 text-white shadow p-5 text-center mb-5" style="margin-top: 15%;">
+  <p class="mb-0 font-weight-bold text-uppercase">{{selectedOrderService}}</p>
+  <div id="clock" class="countdown pt-4">
+    <ul>
+      <li><span style="font-size: 200px;" id="hours">{{hoursToDisplayString}}</span>Hours</li>
+      <li><span style="font-size: 200px;" id="minutes">{{minutesToDisplayString}}</span>Minutes</li>
+      <li><span style="font-size: 200px;" id="seconds">{{secondsToDisplayString}}</span>Seconds</li>
+    </ul>
+  </div>
+
+</div>

@@ -29,6 +29,13 @@ export class TimerMainComponent implements OnInit {
     this.timeFG = this.buildForm(this.formBuilder);
 
     this.orderServiceFG = this.buildOrderServiceForm(this.formBuilder);
+
+    console.log(this.orderOfService);
+
+    this.timerService.getOrderService$()
+      .subscribe(response => {
+        this.orderOfService = response;
+      });
   }
 
   buildForm(builder: FormBuilder) {
@@ -46,24 +53,21 @@ export class TimerMainComponent implements OnInit {
   }
 
   addOrderOfService(item: { Title: string, Duration: string }) {
-    this.orderOfService = [...this.orderOfService, ({ value: item.Duration, label: item.Title } as NgSelectModel)];
+    this.timerService.setOrderServiceSub({ value: item.Duration, label: item.Title } as NgSelectModel);
     this.orderServiceFG.reset();
 
     this.notifierService.notify('success', 'Added sucessfully');
-    console.log(this.orderOfService);
   }
 
   isOrderServiceFGValid(): boolean {
     return this.orderServiceFG.invalid;
   }
   orderServiceSelected(item: NgSelectModel) {
-    console.log('item selected', item);
     this.time.setValue(item.value);
     this.selectedOrderService.setValue(item.label);
   }
 
   isTimeValid() {
-    console.log(this.time.invalid);
     return this.time.invalid;
   }
   startTimer() {

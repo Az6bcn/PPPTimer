@@ -1,9 +1,11 @@
+import { TimerService } from './../timer.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { NgSelectModel } from '../ng-select-model';
 import { Title } from '@angular/platform-browser';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { NotifierService } from 'angular-notifier';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-timer-main',
@@ -18,7 +20,9 @@ export class TimerMainComponent implements OnInit {
   orderServiceFG: FormGroup;
   constructor(
     private formBuilder: FormBuilder,
-    private notifierService: NotifierService) {
+    private notifierService: NotifierService,
+    private timerService: TimerService,
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -58,8 +62,13 @@ export class TimerMainComponent implements OnInit {
     this.selectedOrderService.setValue(item.label);
   }
 
+  isTimeValid() {
+    console.log(this.time.invalid);
+    return this.time.invalid;
+  }
   startTimer() {
-
+    this.timerService.setTimerFGSub(this.timeFG);
+    this.router.navigate(['counter']);
   }
 
   stopTimer() {
@@ -68,4 +77,6 @@ export class TimerMainComponent implements OnInit {
 
   get time() { return this.timeFG.get('Time'); }
   get selectedOrderService() { return this.timeFG.get('SelectedOrderService'); }
+  get title() { return this.orderServiceFG.get('Title'); }
+  get duration() { return this.orderServiceFG.get('Duration'); }
 }

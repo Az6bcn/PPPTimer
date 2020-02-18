@@ -1,8 +1,13 @@
+import { TimerCounterComponent } from './timer-counter/timer-counter.component';
+import { TimerMainComponent } from './timer-main/timer-main.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 
-const routes: Routes = [];
+const routes: Routes = [
+  { path: '', component: TimerMainComponent },
+  { path: 'counter', component: TimerCounterComponent }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

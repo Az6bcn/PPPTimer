@@ -8,25 +8,27 @@ import { RoundProgressModule } from 'angular-svg-round-progressbar'; // <-- here
 import { TimerMainComponent } from './timer-main/timer-main.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NotifierModule } from 'angular-notifier';
+import { TimerCounterComponent } from './timer-counter/timer-counter.component';
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    TimerMainComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    RoundProgressModule,
-    ReactiveFormsModule,
-    NgSelectModule,
-    NotifierModule
-  ],
-  providers: [],
-  bootstrap: [
-    AppComponent
-  ]
+   declarations: [
+      AppComponent,
+      TimerMainComponent,
+      TimerCounterComponent
+   ],
+   imports: [
+      BrowserModule,
+      AppRoutingModule,
+      FormsModule,
+      RoundProgressModule,
+      ReactiveFormsModule,
+      NgSelectModule,
+      NotifierModule
+   ],
+   providers: [],
+   bootstrap: [
+      AppComponent
+   ]
 })
 export class AppModule { }

@@ -1,3 +1,4 @@
+import { TimerService } from './timer.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -12,23 +13,23 @@ import { TimerCounterComponent } from './timer-counter/timer-counter.component';
 
 
 @NgModule({
-   declarations: [
-      AppComponent,
-      TimerMainComponent,
-      TimerCounterComponent
-   ],
-   imports: [
-      BrowserModule,
-      AppRoutingModule,
-      FormsModule,
-      RoundProgressModule,
-      ReactiveFormsModule,
-      NgSelectModule,
-      NotifierModule
-   ],
-   providers: [],
-   bootstrap: [
-      AppComponent
-   ]
+  declarations: [
+    AppComponent,
+    TimerMainComponent,
+    TimerCounterComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    RoundProgressModule,
+    ReactiveFormsModule,
+    NgSelectModule,
+    NotifierModule
+  ],
+  providers: [TimerService],
+  bootstrap: [
+    AppComponent
+  ]
 })
 export class AppModule { }

@@ -27,10 +27,12 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
   selectedHours: string;
   selectedMinutes: string;
   selectedSeconds = '0';
-  minutes$ = new BehaviorSubject<TimeCounterType>({ hours: 0, minutes: 0, counterType: CounterTypeEnum.Up } as TimeCounterType);
-  hours$ = new BehaviorSubject<TimeCounterType>({ hours: 0, minutes: 0, counterType: CounterTypeEnum.Up } as TimeCounterType);
+  minutes$ = new BehaviorSubject<TimeCounterType>({ hours: 0, minutes: 0, counterType: CounterTypeEnum.Down } as TimeCounterType);
+  hours$ = new BehaviorSubject<TimeCounterType>({ hours: 0, minutes: 0, counterType: CounterTypeEnum.Down } as TimeCounterType);
   counterMinutes = 0;
   counterHours = 0;
+  counterMinutesUp = 0;
+  counterHoursUp = 0;
   constructor(private timerService: TimerService) { }
 
   ngOnInit() {
@@ -47,41 +49,26 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
 
           [this.selectedHours, this.selectedMinutes, this.selectedSeconds] = this.selectedTime.split(':');
 
-          this.minutesToDisplay = this.selectedMinutes as any as number;
-          this.hoursToDisplay = this.selectedHours as any as number;
-
-          this.minutesToDisplayString = this.getTwoDigitValue(this.minutesToDisplay);
-          this.hoursToDisplayString = this.getTwoDigitValue(this.hoursToDisplay);
-
-
           this.runTimer();
         }
-
       });
 
     this.minutesSub = this.minutes$.subscribe(response => {
-      if (response.counterType === CounterTypeEnum.Up) {
-        if (response.minutes > 0) {
-          if (this.counterMinutes === 0) {
-            this.counterMinutes = this.counterMinutes + 1;
-            return;
-          }
-          this.minutesToDisplay = this.minutesToDisplay - 1;
-          this.minutesToDisplayString = this.getTwoDigitValue(this.minutesToDisplay);
-        }
+      if (response.counterType === CounterTypeEnum.Down) {
+        this.minutesToDisplayString = this.getTwoDigitValue(response.minutes);
+        console.log(response.minutes);
+      } else {
+        this.minutesToDisplay = this.minutesToDisplay + 1;
+        this.minutesToDisplayString = this.getTwoDigitValue(response.minutes);
       }
     });
 
     this.hoursSub = this.hours$.subscribe(response => {
-      if (response.counterType === CounterTypeEnum.Up) {
-        if (response.hours > 0) {
-          if (this.counterHours === 0) {
-            this.counterHours = this.counterHours + 1;
-            return;
-          }
-          this.hoursToDisplay = this.hoursToDisplay + 1;
-          this.hoursToDisplayString = this.getTwoDigitValue(this.hoursToDisplay);
-        }
+      if (response.counterType === CounterTypeEnum.Down) {
+        this.hoursToDisplayString = this.getTwoDigitValue(response.hours);
+
+      } else {
+        this.hoursToDisplayString = this.getTwoDigitValue(response.hours);
       }
     });
   }
@@ -100,6 +87,7 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     setInterval(x => {
       // get difference between countdown in future and now as number of milliseconds* since the Unix Epoch.
       const difference = date.getTime() - new Date().getTime();
+      // const differenceUp = new Date().getTime() - date.getTime();
 
       // console.log('difference', difference);
       if (difference > 0) {
@@ -107,17 +95,35 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
         const day = Math.floor(difference / (1000 * 60 * 60 * 24));
         const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         if (this.hours$.getValue().hours !== hours) {
-          this.hours$.next({ hours, counterType: CounterTypeEnum.Up } as TimeCounterType);
+          this.hours$.next({ hours: 0, counterType: CounterTypeEnum.Down } as TimeCounterType);
         }
 
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         if (this.minutes$.getValue().minutes !== minutes) {
-          this.minutes$.next({ minutes, counterType: CounterTypeEnum.Up } as TimeCounterType);
+          this.minutes$.next({ minutes, counterType: CounterTypeEnum.Down } as TimeCounterType);
         }
 
         this.secondsToDisplayString = this.getTwoDigitValue(Math.floor((difference % (1000 * 60)) / 1000));
+
       } else {
+        console.log('uppppppp');
         // count up
+        const differenceUp = new Date().getTime();
+
+        // Time calculations for days, hours, minutes and seconds //https://esqsoft.com/javascript_examples/date-to-epoch.htm
+        const day = Math.floor(differenceUp / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((differenceUp % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        if (this.hours$.getValue().hours !== hours) {
+          this.hours$.next({ hours, counterType: CounterTypeEnum.Up } as TimeCounterType);
+        }
+
+        const minutes = Math.floor((differenceUp % (1000 * 60 * 60)) / (1000 * 60));
+        if (this.minutes$.getValue().minutes !== minutes) {
+          this.minutes$.next({ minutes, counterType: CounterTypeEnum.Up } as TimeCounterType);
+        }
+
+        this.secondsToDisplayString = this.getTwoDigitValue(Math.floor(Math.abs(difference % (1000 * 60)) / 1000));
+
       }
     }, 1000); // 10000ms = 1s
 
@@ -136,6 +142,10 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     this.hoursSub.unsubscribe();
 
     clearInterval();
+  }
+
+  setMyClasses() {
+    return { 'redish-gradient': true };
   }
 
 }

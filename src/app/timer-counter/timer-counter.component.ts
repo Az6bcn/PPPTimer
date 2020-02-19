@@ -29,7 +29,8 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
   selectedSeconds = '0';
   minutes$ = new BehaviorSubject<TimeCounterType>({ hours: 0, minutes: 0, counterType: CounterTypeEnum.Up } as TimeCounterType);
   hours$ = new BehaviorSubject<TimeCounterType>({ hours: 0, minutes: 0, counterType: CounterTypeEnum.Up } as TimeCounterType);
-
+  counterMinutes = 0;
+  counterHours = 0;
   constructor(private timerService: TimerService) { }
 
   ngOnInit() {
@@ -51,13 +52,16 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
 
       });
 
-
     this.minutesSub = this.minutes$.subscribe(response => {
       if (response.counterType === CounterTypeEnum.Up) {
-
         if (response.minutes > 0) {
-          console.log(response.minutes);
-          this.minutesToDisplayString = this.getTwoDigitValue(this.minutesToDisplay + 1);
+          if (this.counterMinutes === 0) {
+            this.minutesToDisplayString = this.getTwoDigitValue(this.minutesToDisplay);
+            this.counterMinutes = this.counterMinutes + 1;
+            return;
+          }
+          this.minutesToDisplay = this.minutesToDisplay + 1;
+          this.minutesToDisplayString = this.getTwoDigitValue(this.minutesToDisplay);
         }
       }
     });
@@ -65,8 +69,13 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     this.hoursSub = this.hours$.subscribe(response => {
       if (response.counterType === CounterTypeEnum.Up) {
         if (response.hours > 0) {
-          console.log(response.hours);
-          this.hoursToDisplayString = this.getTwoDigitValue(this.hoursToDisplay + 1);
+          if (this.counterHours === 0) {
+            this.hoursToDisplayString = this.getTwoDigitValue(this.hoursToDisplay);
+            this.counterHours = this.counterHours + 1;
+            return;
+          }
+          this.hoursToDisplay = this.hoursToDisplay + 1;
+          this.hoursToDisplayString = this.getTwoDigitValue(this.hoursToDisplay);
         }
       }
     });
@@ -87,7 +96,7 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
       // get difference between countdown in future and now as number of milliseconds* since the Unix Epoch.
       const difference = date.getTime() - new Date().getTime();
 
-      console.log('difference', difference);
+      // console.log('difference', difference);
       if (difference > 0) {
         // Time calculations for days, hours, minutes and seconds //https://esqsoft.com/javascript_examples/date-to-epoch.htm
         const day = Math.floor(difference / (1000 * 60 * 60 * 24));
@@ -110,7 +119,7 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
   }
 
   getTwoDigitValue(value: number) {
-    if (value < 9) {
+    if (value < 10) {
       return '0' + value;
     }
     return '' + value;

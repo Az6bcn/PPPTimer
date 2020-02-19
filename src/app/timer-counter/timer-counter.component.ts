@@ -24,8 +24,8 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
   secondsToDisplayString = '00';
   selectedTime: string;
   selectedOrderService: string;
-  selectedHours = '0';
-  selectedMinutes = '0';
+  selectedHours: string;
+  selectedMinutes: string;
   selectedSeconds = '0';
   minutes$ = new BehaviorSubject<TimeCounterType>({ hours: 0, minutes: 0, counterType: CounterTypeEnum.Up } as TimeCounterType);
   hours$ = new BehaviorSubject<TimeCounterType>({ hours: 0, minutes: 0, counterType: CounterTypeEnum.Up } as TimeCounterType);
@@ -47,6 +47,13 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
 
           [this.selectedHours, this.selectedMinutes, this.selectedSeconds] = this.selectedTime.split(':');
 
+          this.minutesToDisplay = this.selectedMinutes as any as number;
+          this.hoursToDisplay = this.selectedHours as any as number;
+
+          this.minutesToDisplayString = this.getTwoDigitValue(this.minutesToDisplay);
+          this.hoursToDisplayString = this.getTwoDigitValue(this.hoursToDisplay);
+
+
           this.runTimer();
         }
 
@@ -56,11 +63,10 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
       if (response.counterType === CounterTypeEnum.Up) {
         if (response.minutes > 0) {
           if (this.counterMinutes === 0) {
-            this.minutesToDisplayString = this.getTwoDigitValue(this.minutesToDisplay);
             this.counterMinutes = this.counterMinutes + 1;
             return;
           }
-          this.minutesToDisplay = this.minutesToDisplay + 1;
+          this.minutesToDisplay = this.minutesToDisplay - 1;
           this.minutesToDisplayString = this.getTwoDigitValue(this.minutesToDisplay);
         }
       }
@@ -70,7 +76,6 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
       if (response.counterType === CounterTypeEnum.Up) {
         if (response.hours > 0) {
           if (this.counterHours === 0) {
-            this.hoursToDisplayString = this.getTwoDigitValue(this.hoursToDisplay);
             this.counterHours = this.counterHours + 1;
             return;
           }
@@ -119,7 +124,7 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
   }
 
   getTwoDigitValue(value: number) {
-    if (value < 10) {
+    if (value < 10 && value.toString().length !== 2) {
       return '0' + value;
     }
     return '' + value;

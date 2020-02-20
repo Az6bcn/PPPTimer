@@ -2,7 +2,7 @@
 <h1 class="mb-0 font-weight-bold text-uppercase" style="text-align: center; margin-top: 3%;">{{selectedOrderService}}
 </h1>
 
-<div class="rounded gradient-mio text-white shadow p-5 text-center mb-5" style="margin-top: 8%;"
+<div class="rounded gradient-mio text-white shadow p-5 text-center mb-5" style="margin-top: 5%;"
   [ngClass]="setMyClasses()">
   <div id="clock" class="countdown">
     <ul>
@@ -13,3 +13,7 @@
   </div>
 
 </div>
+
+
+<button type="button" class="btn btn-primary" style="margin-top: 5em;" (click)='backMainPage()'><i
+    class="fas fa-arrow-left"></i></button>

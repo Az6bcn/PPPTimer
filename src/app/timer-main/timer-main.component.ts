@@ -30,8 +30,6 @@ export class TimerMainComponent implements OnInit {
 
     this.orderServiceFG = this.buildOrderServiceForm(this.formBuilder);
 
-    console.log(this.orderOfService);
-
     this.timerService.getOrderService$()
       .subscribe(response => {
         this.orderOfService = response;

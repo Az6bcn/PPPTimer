@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subscription, BehaviorSubject } from 'rxjs';
 import { TimeCounterType as TimeCounterType, CounterTypeEnum } from '../time-counter-type';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-timer-counter',
@@ -31,7 +32,10 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
   hours$ = new BehaviorSubject<TimeCounterType>({ hours: 0, minutes: 0, counterType: CounterTypeEnum.Down } as TimeCounterType);
   isRed: boolean;
   isYellow: boolean;
-  constructor(private timerService: TimerService) { }
+  constructor(
+    private timerService: TimerService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     // get data needed from the service
@@ -81,13 +85,13 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     date.setSeconds(date.getSeconds() + parseInt(this.selectedSeconds, 10));
 
 
-    const eightyPecentTime = date.getTime() * 0.75;
+    const eightyPecentTime = (date.getTime() - new Date().getTime()) * 0.75;
 
     setInterval(x => {
-      // get difference between countdown in future and now as number of milliseconds* since the Unix Epoch.
+      // get difference between countdown time and now as number of milliseconds since the Unix Epoch.
       const difference = date.getTime() - new Date().getTime();
 
-      if (difference === eightyPecentTime) {
+      if (difference <= eightyPecentTime) {
         this.isYellow = true;
       }
 
@@ -137,6 +141,18 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     return '' + value;
   }
 
+  setMyClasses() {
+    return {
+      'redish-gradient': this.isRed,
+      'yellowish-gradient': this.isYellow
+    };
+  }
+
+  backMainPage() {
+    this.router.navigate(['timer']);
+    this.ngOnDestroy();
+  }
+
   ngOnDestroy() {
     // unsubscribe
     this.timeSub.unsubscribe();
@@ -144,13 +160,6 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     this.hoursSub.unsubscribe();
 
     clearInterval();
-  }
-
-  setMyClasses() {
-    return {
-      'redish-gradient': this.isRed,
-      'yellowish-gradient': this.isYellow
-    };
   }
 
 }

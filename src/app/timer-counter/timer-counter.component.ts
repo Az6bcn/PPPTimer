@@ -29,10 +29,8 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
   selectedSeconds = '0';
   minutes$ = new BehaviorSubject<TimeCounterType>({ hours: 0, minutes: 0, counterType: CounterTypeEnum.Down } as TimeCounterType);
   hours$ = new BehaviorSubject<TimeCounterType>({ hours: 0, minutes: 0, counterType: CounterTypeEnum.Down } as TimeCounterType);
-  counterMinutes = 0;
-  counterHours = 0;
-  counterMinutesUp = 0;
-  counterHoursUp = 0;
+  isRed: boolean;
+  isYellow: boolean;
   constructor(private timerService: TimerService) { }
 
   ngOnInit() {
@@ -56,7 +54,6 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     this.minutesSub = this.minutes$.subscribe(response => {
       if (response.counterType === CounterTypeEnum.Down) {
         this.minutesToDisplayString = this.getTwoDigitValue(response.minutes);
-        console.log(response.minutes);
       } else {
         this.minutesToDisplay = this.minutesToDisplay + 1;
         this.minutesToDisplayString = this.getTwoDigitValue(response.minutes);
@@ -84,12 +81,16 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     date.setSeconds(date.getSeconds() + parseInt(this.selectedSeconds, 10));
 
 
+    const eightyPecentTime = date.getTime() * 0.75;
+
     setInterval(x => {
       // get difference between countdown in future and now as number of milliseconds* since the Unix Epoch.
       const difference = date.getTime() - new Date().getTime();
-      // const differenceUp = new Date().getTime() - date.getTime();
 
-      // console.log('difference', difference);
+      if (difference === eightyPecentTime) {
+        this.isYellow = true;
+      }
+
       if (difference > 0) {
         // Time calculations for days, hours, minutes and seconds //https://esqsoft.com/javascript_examples/date-to-epoch.htm
         const day = Math.floor(difference / (1000 * 60 * 60 * 24));
@@ -106,11 +107,11 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
         this.secondsToDisplayString = this.getTwoDigitValue(Math.floor((difference % (1000 * 60)) / 1000));
 
       } else {
-        console.log('uppppppp');
+        this.isRed = true;
         // count up
         const differenceUp = new Date().getTime();
 
-        // Time calculations for days, hours, minutes and seconds //https://esqsoft.com/javascript_examples/date-to-epoch.htm
+        // Time calculations for days, hours, minutes and seconds
         const day = Math.floor(differenceUp / (1000 * 60 * 60 * 24));
         const hours = Math.floor((differenceUp % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         if (this.hours$.getValue().hours !== hours) {
@@ -135,6 +136,7 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     }
     return '' + value;
   }
+
   ngOnDestroy() {
     // unsubscribe
     this.timeSub.unsubscribe();
@@ -145,7 +147,10 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
   }
 
   setMyClasses() {
-    return { 'redish-gradient': true };
+    return {
+      'redish-gradient': this.isRed,
+      'yellowish-gradient': this.isYellow
+    };
   }
 
 }

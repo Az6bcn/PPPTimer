@@ -6,6 +6,7 @@ import { Title } from '@angular/platform-browser';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { NotifierService } from 'angular-notifier';
 import { Router } from '@angular/router';
+import { TimeValidatorFn } from '../time-validatorFn';
 
 @Component({
   selector: 'app-timer-main',
@@ -46,7 +47,7 @@ export class TimerMainComponent implements OnInit {
   buildOrderServiceForm(builder: FormBuilder) {
     return builder.group({
       Title: ['', Validators.required],
-      Duration: ['', Validators.required]
+      Duration: ['', [Validators.required, TimeValidatorFn]]
     });
   }
 

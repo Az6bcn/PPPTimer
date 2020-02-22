@@ -85,7 +85,7 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     date.setSeconds(date.getSeconds() + parseInt(this.selectedSeconds, 10));
 
 
-    const eightyPecentTime = (date.getTime() - new Date().getTime()) * 0.75;
+    const eightyPecentTime = (date.getTime() - new Date().getTime()) * 0.83;
 
     setInterval(x => {
       // get difference between countdown time and now as number of milliseconds since the Unix Epoch.

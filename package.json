@@ -2,6 +2,8 @@
   "name": "angular-electron",
   "version": "0.0.0",
   "main": "main.js",
+  "author": "Olusegun Odumosu",
+  "license": "PPP",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -11,7 +13,8 @@
     "e2e": "ng e2e",
     "electron": "electron .",
     "electron-build": "ng build --prod && electron .",
-    "electron-start": "ng build --base-href && electron"
+    "electron-start": "ng build --base-href && electron",
+    "dist": "electron-builder"
   },
   "private": true,
   "dependencies": {
@@ -55,5 +58,17 @@
     "ts-node": "~8.3.0",
     "tslint": "~5.18.0",
     "typescript": "~3.7.5"
+  },
+  "build": {
+    "appId": "com.ppptimer.app",
+    "directories": {
+      "output": "build"
+    },
+    "productName": "PPP Timer",
+    "target": "NSIS",
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    }
   }
 }

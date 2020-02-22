@@ -1,4 +1,6 @@
 // root of my  app
+const path = require('path');
+const url = require('url');
 const {
   app,
   BrowserWindow
@@ -18,15 +20,20 @@ function createWindow() {
     title: "PPP Timer"
   });
 
-  win.loadURL(`file://${__dirname}/dist/angular-electron/index.html`);
+  win.loadURL(
+      url.format({
+        pathname: path.join(__dirname, 'dist/angular-electron/index.html'),
+        protocol: "file:",
+        slashes: true
+      })),
 
-  //// uncomment below to open the DevTools.
-  // win.webContents.openDevTools()
+    //// uncomment below to open the DevTools.
+    // win.webContents.openDevTools()
 
-  // Event when the window is closed.
-  win.on("closed", function () {
-    win = null;
-  });
+    // Event when the window is closed.
+    win.on("closed", function () {
+      win = null;
+    });
 }
 
 // Create window on electron intialization

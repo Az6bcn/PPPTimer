@@ -32,6 +32,9 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
   hours$ = new BehaviorSubject<TimeCounterType>({ hours: 0, minutes: 0, counterType: CounterTypeEnum.Down } as TimeCounterType);
   isRed: boolean;
   isYellow: boolean;
+  dateForCountUp: any;
+  minutes = 0;
+  hours = 0;
   constructor(
     private timerService: TimerService,
     private router: Router
@@ -97,6 +100,21 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
 
       if (difference > 0) {
         // Time calculations for days, hours, minutes and seconds //https://esqsoft.com/javascript_examples/date-to-epoch.htm
+        // 1000 * 60 * 60 * 24 : days in seconds === 86400s
+
+        /**
+         * difference in ms:
+         * difference to seconds = difference / 1000
+         * difference in minutes = difference to seconds / 60
+         * difference in hours = difference to minutes / 60
+         * difference in days = difference to minutes / 24
+         *
+         * difference in ms:
+         * difference in days (from ms) = difference / (1000 * 60 * 60 * 24)
+         * difference in hours (from days) = (difference % (1000 * 60 * 60 * 24) / (1000 * 60 * 60))
+         * difference in minutes (from hours) = (difference % (1000 * 60 * 60) / (1000 * 60)
+         */
+
         const day = Math.floor(difference / (1000 * 60 * 60 * 24));
         const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         if (this.hours$.getValue().hours !== hours) {
@@ -113,25 +131,44 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
       } else {
         this.isRed = true;
         // count up
-        const differenceUp = new Date().getTime();
+        if (!this.dateForCountUp) {
+          this.dateForCountUp = this.getNewDateForCountUp();
+        }
+        const differenceUp = this.dateForCountUp.getTime();
+        // const differenceUp = new Date().getTime();
+
+        const seconds = Math.floor(Math.abs(difference % (1000 * 60)) / 1000);
 
         // Time calculations for days, hours, minutes and seconds
-        const day = Math.floor(differenceUp / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((differenceUp % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        if (this.hours$.getValue().hours !== hours) {
-          this.hours$.next({ hours, counterType: CounterTypeEnum.Up } as TimeCounterType);
-        }
 
-        const minutes = Math.floor((differenceUp % (1000 * 60 * 60)) / (1000 * 60));
-        if (this.minutes$.getValue().minutes !== minutes) {
+        if (seconds === 59) {
+          this.minutes = this.minutes + 1;
+          if (this.minutes === 59) {
+            this.hours = this.hours + 1;
+            const hours = this.hours;
+            this.hours$.next({ hours, counterType: CounterTypeEnum.Up } as TimeCounterType);
+          }
+
+          const minutes = this.minutes;
           this.minutes$.next({ minutes, counterType: CounterTypeEnum.Up } as TimeCounterType);
         }
+
+
 
         this.secondsToDisplayString = this.getTwoDigitValue(Math.floor(Math.abs(difference % (1000 * 60)) / 1000));
 
       }
     }, 1000); // 10000ms = 1s
 
+  }
+
+  getNewDateForCountUp() {
+    const date = new Date();
+    date.setUTCHours(0);
+    date.setUTCMinutes(0);
+    date.setUTCSeconds(0);
+
+    return date;
   }
 
   getTwoDigitValue(value: number) {

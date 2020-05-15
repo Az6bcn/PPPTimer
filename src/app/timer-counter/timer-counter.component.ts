@@ -53,7 +53,10 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
           this.selectedTime = this.timeFGValue.Time;
           this.selectedOrderService = this.timeFGValue.SelectedOrderService;
 
-          [this.selectedHours, this.selectedMinutes, this.selectedSeconds] = this.selectedTime.split(':');
+          if (this.selectedTime) {
+            [this.selectedHours, this.selectedMinutes, this.selectedSeconds] = this.selectedTime.split(':');
+          }
+
 
           this.runTimer();
         }

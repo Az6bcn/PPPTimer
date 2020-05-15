@@ -1,7 +1,8 @@
+import { RecordTimer } from './record-timer';
 import { NgSelectModel } from './ng-select-model';
 import { FormGroup } from '@angular/forms';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ export class TimerService {
 
   private timeFG$ = new BehaviorSubject<FormGroup>(null);
   private orderOfServiceSub = new BehaviorSubject<Array<NgSelectModel>>([]);
+  private recordTimeSub = new ReplaySubject<RecordTimer>(20);
   setTimerFGSub(data: FormGroup) {
     this.timeFG$.next(data);
   }
@@ -35,5 +37,16 @@ export class TimerService {
 
   getOrderService$(): Observable<Array<NgSelectModel>> {
     return this.orderOfServiceSub.asObservable();
+  }
+
+  setRecordTimer(record: RecordTimer) {
+    this.recordTimeSub.next(record);
+  }
+
+  /**
+   * Returns the last nth values, where n in this case is 20
+   */
+  getRecorderTimes() {
+    return this.recordTimeSub.asObservable();
   }
 }

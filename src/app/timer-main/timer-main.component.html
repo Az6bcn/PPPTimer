@@ -40,11 +40,15 @@
           </div>
         </div>
         <div class="row">
-          <div class="form-group  col-6 offset-5">
+          <div class="form-group  col-8 offset-4">
             <button type="button" class="btn btn-primary" style="margin-right: 1em; " (click)='startTimer()'
               [disabled]='isTimeValid()'>Start</button>
-            <button type="button" class="btn" style="background-color: #D16BA5; border-color: #D16BA5;"
-              (click)=stopTimer()>Stop</button>
+            <!-- <button type="button" class="btn"
+              style="margin-right: 1em; background-color: #D16BA5; border-color: #D16BA5;"
+              (click)=stopTimer()>Stop</button> -->
+            <button type="button" class="btn" style=" background-color: #D16BA5; border-color: #D16BA5;"
+              (click)=generateReport()>Generate
+              Report</button>
           </div>
         </div>
       </form>

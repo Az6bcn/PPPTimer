@@ -28,13 +28,13 @@ function createWindow() {
     })),
 
 
-  //// uncomment below to open the DevTools.
-  // win.webContents.openDevTools()
+    //// uncomment below to open the DevTools.
+    // win.webContents.openDevTools()
 
-  // Event when the window is closed.
-  win.on("closed", function () {
-    win = null;
-  });
+    // Event when the window is closed.
+    win.on("closed", function () {
+      win = null;
+    });
 }
 
 // Create window on electron intialization

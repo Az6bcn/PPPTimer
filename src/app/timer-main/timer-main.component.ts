@@ -88,8 +88,8 @@ export class TimerMainComponent implements OnInit {
 
   generateReport() {
     const fs = (<any>window).require("fs");
-    const date = new Date();
-    const filepath = `C:/Documents/TimeReports/${date}.txt`;
+    const date = new Date().toISOString;
+    const filepath = `C:\TimeReports\${date}.txt`;
     this.timerService.getRecorderTimes()
       .subscribe(response => {
         console.log('reports ', response);

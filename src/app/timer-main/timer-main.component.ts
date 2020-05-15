@@ -14,17 +14,22 @@ import { TimeValidatorFn } from '../time-validatorFn';
   styleUrls: ['./timer-main.component.css']
 })
 export class TimerMainComponent implements OnInit {
-
-  logo = '../../assets/ppp_logo.png';
-  timeFG: FormGroup;
-  orderOfService: Array<NgSelectModel> = [];
-  orderServiceFG: FormGroup;
   constructor(
     private formBuilder: FormBuilder,
     private notifierService: NotifierService,
     private timerService: TimerService,
     private router: Router) {
   }
+
+  get time() { return this.timeFG.get('Time'); }
+  get selectedOrderService() { return this.timeFG.get('SelectedOrderService'); }
+  get title() { return this.orderServiceFG.get('Title'); }
+  get duration() { return this.orderServiceFG.get('Duration'); }
+
+  logo = '../../assets/ppp_logo.png';
+  timeFG: FormGroup;
+  orderOfService: Array<NgSelectModel> = [];
+  orderServiceFG: FormGroup;
 
   ngOnInit() {
     this.timeFG = this.buildForm(this.formBuilder);
@@ -78,8 +83,10 @@ export class TimerMainComponent implements OnInit {
 
   }
 
-  get time() { return this.timeFG.get('Time'); }
-  get selectedOrderService() { return this.timeFG.get('SelectedOrderService'); }
-  get title() { return this.orderServiceFG.get('Title'); }
-  get duration() { return this.orderServiceFG.get('Duration'); }
+  generateReport() {
+    this.timerService.getRecorderTimes()
+      .subscribe(response => {
+        console.log('reports ', response);
+      });
+  }
 }

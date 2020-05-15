@@ -1,3 +1,4 @@
+import { RecordTimer } from './../record-timer';
 import { TimerService } from './../timer.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -132,7 +133,7 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
         this.isRed = true;
         // count up
         if (!this.dateForCountUp) {
-          this.dateForCountUp = this.getNewDateForCountUp();
+          this.dateForCountUp = this.getNewDateForCountUp(false);
         }
         const differenceUp = this.dateForCountUp.getTime();
         // const differenceUp = new Date().getTime();
@@ -161,16 +162,6 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     }, 1000); // 10000ms = 1s
 
   }
-
-  getNewDateForCountUp() {
-    const date = new Date();
-    date.setUTCHours(0);
-    date.setUTCMinutes(0);
-    date.setUTCSeconds(0);
-
-    return date;
-  }
-
   getTwoDigitValue(value: number) {
     if (value < 10 && value.toString().length !== 2) {
       return '0' + value;
@@ -185,7 +176,31 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     };
   }
 
+  getNewDateForCountUp(isBackToMainPage: boolean) {
+    const date = new Date();
+
+    if (isBackToMainPage) {
+      const hours = this.hours$.getValue().hours;
+      const mins = this.minutes$.getValue().minutes;
+      date.setHours(this.hours$.getValue().hours);
+      date.setMinutes(this.minutes$.getValue().minutes);
+      date.setSeconds(0);
+
+      return date;
+    }
+
+    date.setUTCHours(0);
+    date.setUTCMinutes(0);
+    date.setUTCSeconds(0);
+
+    return date;
+  }
   backMainPage() {
+    // set timer
+    const date = this.getNewDateForCountUp(true);
+    const extraTime = `${date.getHours()}h: ${date.getMinutes()}mns: ${this.secondsToDisplayString}s`;
+    this.timerService.setRecordTimer({ title: this.selectedOrderService, time: this.selectedTime, extraTime } as RecordTimer);
+
     this.router.navigate(['timer']);
     this.ngOnDestroy();
   }

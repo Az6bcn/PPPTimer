@@ -2,7 +2,7 @@ import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 export function TimeValidatorFn(control: AbstractControl): ValidationErrors | null {
 
-  if (control.valid) {
+  if (control.valid && control.value) {
     const value = control.value;
 
     const splitted = value.split(':');

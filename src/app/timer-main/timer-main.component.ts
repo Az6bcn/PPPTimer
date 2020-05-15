@@ -8,18 +8,21 @@ import { NotifierService } from 'angular-notifier';
 import { Router } from '@angular/router';
 import { TimeValidatorFn } from '../time-validatorFn';
 
+
 @Component({
   selector: 'app-timer-main',
   templateUrl: './timer-main.component.html',
   styleUrls: ['./timer-main.component.css']
 })
 export class TimerMainComponent implements OnInit {
+
   constructor(
     private formBuilder: FormBuilder,
     private notifierService: NotifierService,
     private timerService: TimerService,
     private router: Router) {
   }
+
 
   get time() { return this.timeFG.get('Time'); }
   get selectedOrderService() { return this.timeFG.get('SelectedOrderService'); }
@@ -84,9 +87,22 @@ export class TimerMainComponent implements OnInit {
   }
 
   generateReport() {
+    const fs = (<any>window).require("fs");
+    const date = new Date();
+    const filepath = `C:/Documents/TimeReports/${date}.txt`;
     this.timerService.getRecorderTimes()
       .subscribe(response => {
         console.log('reports ', response);
+        fs.writeFile(filepath, response, (err) => {
+          if(err){
+              alert("An error ocurred creating the file "+ err.message);
+          }
+
+          alert("The file has been succesfully saved");
       });
+      });
+
+
+
   }
 }

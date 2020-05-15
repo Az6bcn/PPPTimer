@@ -1,4 +1,6 @@
 // root of my  app
+const path = require('path');
+const url = require('url');
 const {
   app,
   BrowserWindow
@@ -10,15 +12,21 @@ function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     width: 900,
-    height: 600,
+    height: 850,
     backgroundColor: "#ffffff",
     // icon: `file://${__dirname}/dist/assets/logo.png`,
-    fullscreen: true,
+    fullscreen: false,
     fullscreenWindowTitle: "PPP Timer",
     title: "PPP Timer"
   });
 
-  win.loadURL(`file://${__dirname}/dist/angular-electron/index.html`);
+  win.loadURL(
+    url.format({
+    pathname: path.join(__dirname, 'dist/angular-electron/index.html'),
+    protocol: "file:",
+    slashes: true
+    })),
+
 
   //// uncomment below to open the DevTools.
   // win.webContents.openDevTools()

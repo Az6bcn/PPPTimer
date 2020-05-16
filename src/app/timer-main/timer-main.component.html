@@ -47,8 +47,12 @@
               style="margin-right: 1em; background-color: #D16BA5; border-color: #D16BA5;"
               (click)=stopTimer()>Stop</button> -->
             <button type="button" class="btn" style=" background-color: #D16BA5; border-color: #D16BA5;"
-              (click)=generateReport()>Generate
+              (click)=generateReport() [disabled]='disableGenerateBtn$ | async'>Generate
               Report</button>
+              <div class='form-check'>
+                <input #checkBox id="chckbox" class="form-check-input" type='checkbox' (change)="checkBoxChanged(checkBox)" />
+                <label class="form-check-label" for='chckbox'> Generate Report?</label>
+              </div>
           </div>
         </div>
       </form>

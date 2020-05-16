@@ -49,4 +49,8 @@ export class TimerService {
   getRecorderTimes() {
     return this.recordTimeSub.asObservable();
   }
+
+  completeRecorderTimes(){
+    this.recordTimeSub.complete();
+  }
 }

@@ -183,10 +183,10 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     const date = new Date();
 
     if (isBackToMainPage) {
-      const hours = this.hours$.getValue().hours;
-      const mins = this.minutes$.getValue().minutes;
-      date.setHours(this.hours$.getValue().hours);
-      date.setMinutes(this.minutes$.getValue().minutes);
+      const hours = this.hours$.getValue().counterType === CounterTypeEnum.Up ? this.hours$.getValue().hours : 0;
+      const mins = this.minutes$.getValue().counterType === CounterTypeEnum.Up ? this.minutes$.getValue().minutes : 0;
+      date.setHours(hours);
+      date.setMinutes(mins);
       date.setSeconds(0);
 
       return date;

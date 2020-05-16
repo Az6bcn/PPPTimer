@@ -7,6 +7,9 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { NotifierService } from 'angular-notifier';
 import { Router } from '@angular/router';
 import { TimeValidatorFn } from '../time-validatorFn';
+import {finalize} from 'rxjs/operators';
+import { RecordTimer } from '../record-timer';
+import { BehaviorSubject } from 'rxjs';
 
 
 @Component({
@@ -33,6 +36,8 @@ export class TimerMainComponent implements OnInit {
   timeFG: FormGroup;
   orderOfService: Array<NgSelectModel> = [];
   orderServiceFG: FormGroup;
+  contents = [];
+  disableGenerateBtn$ = new BehaviorSubject<boolean>(true);
 
   ngOnInit() {
     this.timeFG = this.buildForm(this.formBuilder);
@@ -87,22 +92,62 @@ export class TimerMainComponent implements OnInit {
   }
 
   generateReport() {
-    const fs = (<any>window).require("fs");
-    const date = new Date().toISOString;
-    const filepath = `C:\TimeReports\${date}.txt`;
+    this.timerService.completeRecorderTimes();
+
+    const fs = ( window as any).require('fs');
+    const path = (window as any).require('path');
+    const date = new Date();
+    const filepath = `C:/TimeReports/SundayTimeReport_${date.getDate()}_${date.getMonth()}_${date.getFullYear()}.txt`;
+    const directory = 'C:/TimeReports';
     this.timerService.getRecorderTimes()
-      .subscribe(response => {
-        console.log('reports ', response);
-        fs.writeFile(filepath, response, (err) => {
-          if(err){
-              alert("An error ocurred creating the file "+ err.message);
+      .pipe(
+        finalize(() => {
+
+          if (!fs.existsSync(directory)) {
+            fs.mkdir(directory, {recursive: true}, (err) => {
+              if (err){
+                this.notifierService.notify('error', `${err.message}`);
+                return;
+              }else{
+                fs.writeFileSync(filepath, this.contents.join(' \r\n '), (err2) => {
+                  if (err2) {
+                      this.notifierService.notify('error', `${err2.message}`);
+                      return;
+                  }
+                  this.notifierService.notify('success', 'The file has been succesfully saved');
+              });
+              }
+            });
+          }else{
+            fs.writeFileSync(filepath, this.contents.join(' \r\n '), (err2) => {
+              if (err2) {
+                  this.notifierService.notify('error', `${err2.message}`);
+                  return;
+              }
+              this.notifierService.notify('success', 'The file has been succesfully saved');
+          });
           }
+        })
+      )
+      .subscribe((response: RecordTimer) => {
+        this.concatenateContent(response.title, response.time, response.extraTime);
+      },
+      error => console.log(error),
+      () => console.log('completed')
+      );
+  }
 
-          alert("The file has been succesfully saved");
-      });
-      });
+  concatenateContent(title: string, time: string, extraTime: string) {
+    const content = [title, ' ', `Time Allocated: ' ${time}`, ' ', `Exceeded by: ${extraTime}` ].join('');
+    this.contents.push(content);
+  }
 
-
-
+  checkBoxChanged(chckbox: HTMLInputElement){
+    if(chckbox.checked){
+      // disable generate report button
+      this.disableGenerateBtn$.next(false);
+      return;
+    }
+    this.disableGenerateBtn$.next(true);
   }
 }

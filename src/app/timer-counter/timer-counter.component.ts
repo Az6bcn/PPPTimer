@@ -83,7 +83,7 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
 
   runTimer() {
     const date = new Date();
-
+    const datetimeFor80 = date;
     // add hours
     date.setHours(date.getHours() + parseInt(this.selectedHours, 10));
     // add minutes
@@ -92,12 +92,18 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
     date.setSeconds(date.getSeconds() + parseInt(this.selectedSeconds, 10));
 
 
-    const eightyPecentTime = (date.getTime() - new Date().getTime()) * 0.83;
+    const selectedHoursAt80Percent = (parseInt(this.selectedHours, 10) * 60 * 80) / 100;
+    const selectedMinutesAt80Percent = (parseInt(this.selectedMinutes, 10) * 80) / 100;
 
+    const date80Percent = datetimeFor80;
+    date80Percent.setHours(datetimeFor80.getHours() + selectedHoursAt80Percent);
+    // add minutes
+    date80Percent.setMinutes(datetimeFor80.getMinutes() + selectedMinutesAt80Percent);
+
+    const eightyPecentTime = ((date80Percent.getTime() / 100000000).toFixed() as any as number);
     setInterval(x => {
       // get difference between countdown time and now as number of milliseconds since the Unix Epoch.
       const difference = date.getTime() - new Date().getTime();
-
       if (difference <= eightyPecentTime) {
         this.isYellow = true;
       }
@@ -145,9 +151,9 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
 
         // Time calculations for days, hours, minutes and seconds
 
-        if (seconds === 59) {
+        if (seconds >= 59) {
           this.minutes = this.minutes + 1;
-          if (this.minutes === 59) {
+          if (this.minutes >= 59) {
             this.hours = this.hours + 1;
             const hours = this.hours;
             this.hours$.next({ hours, counterType: CounterTypeEnum.Up } as TimeCounterType);

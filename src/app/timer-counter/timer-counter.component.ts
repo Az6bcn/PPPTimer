@@ -83,7 +83,7 @@ export class TimerCounterComponent implements OnInit, OnDestroy {
 
   runTimer() {
     const date = new Date();
-    const datetimeFor80 = date;
+    const datetimeFor80 = new Date(date);
     // add hours
     date.setHours(date.getHours() + parseInt(this.selectedHours, 10));
     // add minutes

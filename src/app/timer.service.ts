@@ -50,7 +50,11 @@ export class TimerService {
     return this.recordTimeSub.asObservable();
   }
 
-  completeRecorderTimes(){
+  completeRecorderTimes() {
     this.recordTimeSub.complete();
+  }
+
+  unsubscribeRecord$() {
+    this.recordTimeSub.unsubscribe();
   }
 }

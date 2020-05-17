@@ -1,6 +1,6 @@
 import { TimerService } from './../timer.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgSelectModel } from '../ng-select-model';
 import { Title } from '@angular/platform-browser';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
@@ -17,7 +17,7 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './timer-main.component.html',
   styleUrls: ['./timer-main.component.css']
 })
-export class TimerMainComponent implements OnInit {
+export class TimerMainComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
@@ -147,5 +147,9 @@ export class TimerMainComponent implements OnInit {
       return;
     }
     this.disableGenerateBtn$.next(true);
+  }
+
+  ngOnDestroy(){
+    this.timerService.unsubscribeRecord$();
   }
 }

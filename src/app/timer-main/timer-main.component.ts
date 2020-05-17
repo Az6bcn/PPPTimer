@@ -92,6 +92,7 @@ export class TimerMainComponent implements OnInit, OnDestroy {
   }
 
   generateReport() {
+    this.contents = [];
     this.timerService.completeRecorderTimes();
 
     const fs = (window as any).require('fs');
